@@ -1,0 +1,7 @@
+
+[allowed]
+hosts=["255.255.255.255/0"]
+
+[banned]
+interfaces=["eth0", "em0"]
+hosts=["yahoo.com", "1.2.3.4"]
