@@ -3,9 +3,9 @@ package acl
 import (
   "github.com/BurntSushi/toml"
   "github.com/steakknife/ip"
-  "log"
+//  "log"
   "net"
-  "os"
+//  "os"
   "strings"
   "sync"
 )
@@ -14,7 +14,7 @@ const (
   DefaultConfigFilename = "network.toml"
 )
 
-var Logger *log.Logger = log.New(os.Stderr, "", log.Llongfile|log.LstdFlags|log.Lmicroseconds)
+//var Logger *log.Logger = log.New(os.Stderr, "", log.Llongfile|log.LstdFlags|log.Lmicroseconds)
 
 // Allowed defaults to none (nothing is allowed)
 // Banned defaults to none
@@ -74,11 +74,11 @@ func parseHosts(strs []string) (addrs []ip.IP, hosts []string, err error) {
   for _, str := range strs {
     addr, err2 := ip.Parse(str)
     if err2 != nil {
-      Logger.Println("ip.Parse(", str, ") = <nil>, err=", err2)
+//      Logger.Println("ip.Parse(", str, ") = <nil>, err=", err2)
       hosts = append(hosts, str)
       continue
     }
-    Logger.Println("ip.Parse(", str, ") = ", addr.Inspect(), ", err=", nil)
+    //Logger.Println("ip.Parse(", str, ") = ", addr.Inspect(), ", err=", nil)
     addrs = append(addrs, addr)
   }
   return
@@ -87,11 +87,11 @@ func parseHosts(strs []string) (addrs []ip.IP, hosts []string, err error) {
 func matchInterface(iface *net.Interface, matchIfaces []string) bool {
   for _, matchIface := range matchIfaces {
     if iface.Name == matchIface {
-      Logger.Println("matchInterface(iface=", iface, ", matchIfaces=", matchIfaces, ") = ", true)
+      //Logger.Println("matchInterface(iface=", iface, ", matchIfaces=", matchIfaces, ") = ", true)
       return true
     }
   }
-  Logger.Println("matchInterface(iface=", iface, ", matchIfaces=", matchIfaces, ") = ", false)
+  //Logger.Println("matchInterface(iface=", iface, ", matchIfaces=", matchIfaces, ") = ", false)
   return false
 }
 
@@ -99,11 +99,11 @@ func matchAddress(iface *net.Interface, addr net.IP, matchAddrs []ip.IP) bool {
   for _, matchAddr := range matchAddrs {
     if matchAddr.ContainsWithInterface(addr, iface) {
 
-      Logger.Println("matchAddress(iface=", iface, ", addr=", addr, ", matchHosts=", matchAddrs, ") = ", true)
+      //Logger.Println("matchAddress(iface=", iface, ", addr=", addr, ", matchHosts=", matchAddrs, ") = ", true)
       return true
     }
   }
-  Logger.Println("matchAddress(iface=", iface, ", addr=", addr, ", matchHosts=", matchAddrs, ") = ", false)
+  //Logger.Println("matchAddress(iface=", iface, ", addr=", addr, ", matchHosts=", matchAddrs, ") = ", false)
   return false
 }
 
@@ -117,13 +117,13 @@ func matchHost(iface *net.Interface, addr net.IP, matchHosts []string) (result b
       defer wg.Done()
       resolvedAddrs, err := net.LookupHost(matchHost)
       if err != nil {
-        Logger.Println("matchHost LookupHost() error = ", err)
+        //Logger.Println("matchHost LookupHost() error = ", err)
         return
       }
       for _, resolvedAddr := range resolvedAddrs {
         ipIP, err2 := ip.Parse(resolvedAddr)
         if err2 != nil {
-          Logger.Println("matchHost ip.Parse() error = ", err2)
+          //Logger.Println("matchHost ip.Parse() error = ", err2)
           continue
         }
         if ipIP.ContainsWithInterface(addr, iface) {
@@ -134,7 +134,7 @@ func matchHost(iface *net.Interface, addr net.IP, matchHosts []string) (result b
     }()
   }
   wg.Wait()
-  Logger.Println("matchHost(iface=", iface, ", addr=", addr, ", matchHosts=", matchHosts, ") = ", result)
+  //Logger.Println("matchHost(iface=", iface, ", addr=", addr, ", matchHosts=", matchHosts, ") = ", result)
   return result
 }
 
